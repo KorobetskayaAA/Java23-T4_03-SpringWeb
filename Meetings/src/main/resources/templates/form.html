@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="../fragments/layout :: headerFragment">
+    <meta charset="UTF-8">
+    <title>Собрания - Новое собрание</title>
+</head>
+<body>
+<header th:replace="../fragments/layout :: header(${#strings.equals(action,'create')} ? 'Новое собрание' : 'Редактировать собрание')"> </header>
+
+<main class="py-2">
+    <div class="container">
+        <div class="row my-5">
+            <form th:action="@{/form}" th:object="${meeting}" method="post" th:method="post">
+                <input class="form-control" type="hidden" th:field="*{id}"/>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="input-title">Тема собрания</label>
+                            <input id="input-title" class="form-control" type="text" th:field="*{title}"
+                                   th:errorclass="is-invalid"/>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}"
+                                 th:errors="*{title}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="input-url">Ссылка на созвон</label>
+                        <input id="input-url" class="form-control" type="url" th:field="*{url}"
+                               th:errorclass="is-invalid"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="input-location">Место встречи</label>
+                        <input id="input-location" class="form-control" type="text" th:field="*{location}"
+                               th:errorclass="is-invalid"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="input-from">С</label>
+                            <input id="input-from" class="form-control" type="datetime-local" th:field="*{from}"
+                                   th:errorclass="is-invalid"/>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('from')}"
+                                 th:errors="*{from}"></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label" for="input-to">До</label>
+                            <input id="input-to" class="form-control" type="datetime-local" th:field="*{till}"
+                                   th:errorclass="is-invalid"/>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('till')}"
+                                 th:errors="*{till}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col">
+                        <label for="input-creator" class="form-label">Организатор</label>
+                        <div class="input-group">
+                            <select class="form-select" id="input-creator" name="creator.email"
+                                    th:value="*{creator?.email}" th:errorclass="is-invalid">
+                                <option
+                                        th:each="p : ${participantsAll}"
+                                        th:value="${p.email}"
+                                        th:text="${p}">
+                                    Анастасия Коробецкая &lt;akorobetskaya@teamscore.ru&gt;
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <h4>Участники</h4>
+                        <ul class="list-group">
+                            <li th:each="p,rowStat : *{participants}" class="list-group-item">
+                                <div class="input-group">
+                                    <input class="form-control" value="Анастасия Коробецкая"
+                                           th:field="*{participants[__${rowStat.index}__].name}" readonly/>
+                                    <input class="form-control" value="akorobetskaya@teamscore.ru"
+                                           th:field="*{participants[__${rowStat.index}__].email}" readonly/>
+                                    <button class="btn btn-secondary" type="submit"
+                                            name="removeParticipant" th:value="${p.email}"><i
+                                            class="bi bi-person-dash-fill"></i></button>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="form-label" for="input-add-participant">Новый участник</label>
+                                    <div class="input-group" id="input-add-participant" th:object="${newParticipant}">
+                                        <input class="form-control" name="addParticipantName" placeholder="Имя"/>
+                                        <input class="form-control" name="addParticipantEmail" type="email"
+                                               placeholder="Email"/>
+
+                                        <button class="btn btn-secondary" type="submit"
+                                                name="addParticipant"><i
+                                                class="bi bi-person-plus-fill"></i></button>
+                                    </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <button id="add" type="submit" class="btn btn-primary">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

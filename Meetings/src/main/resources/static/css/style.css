@@ -1,0 +1,11 @@
+.participant {
+    margin: 1px 2px;
+    padding: 0 0.1em;
+    width: auto;
+    text-align: start;
+    text-wrap: pretty;
+}
+
+.participant::marker {
+    content: none;
+}
