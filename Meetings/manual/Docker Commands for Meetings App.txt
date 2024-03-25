@@ -1,0 +1,20 @@
+# Пример с лекции 4.03
+git clone https://github.com/KorobetskayaAA/Java23-T4_03-SpringWeb
+# Перейти в папку с Meetings
+cd ./Meetings
+# Выполняем сборку и тестовый запуск JAR, после проверки остановить Ctrl+C
+./mvnw package && java -jar target/meetings-0.0.1-SNAPSHOT.jar
+# На случай, если уже создавали контейнер и образ, - удаляем их
+docker rm meetings
+docker rmi java-spring-meetings
+#Выполняем сборку образа java-spring-meetings из Dockerfile в текущей папке .
+docker build -t java-spring-meetings .
+# Проверяем, что образ есть
+docker images
+# Запускаем контейнер meetings на порт 80, с автоперезапуском unless-stopped
+# и в фоновом режиме (-d == --detach), без вывода в консоль
+docker run --name meetings --restart unless-stopped -d -p 80:8080 java-spring-meetings
+# Проверяем статус контейнера
+docker ps -a
+# Тестовый запрос (или идем в браузер)
+http://localhost:80
